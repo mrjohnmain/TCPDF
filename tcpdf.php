@@ -13053,6 +13053,9 @@ class TCPDF {
 		if (!isset($prop['value'])) {
 			$prop['value'] = array('Yes');
 		}
+		if (TCPDF_STATIC::empty_string($onvalue)) {
+			$onvalue = 'Yes';
+		}
 		// get default style
 		$prop = array_merge($this->getFormDefaultProp(), $prop);
 		$prop['borderStyle'] = 'inset';
@@ -13074,7 +13077,7 @@ class TCPDF {
 		$popt['ap']['n'] = array();
 		$fx = ((($w - $this->getAbsFontMeasure($tmpfont['cw'][110])) / 2) * $this->k);
 		$fy = (($w - ((($tmpfont['desc']['Ascent'] - $tmpfont['desc']['Descent']) * $this->FontSizePt / 1000) / $this->k)) * $this->k);
-		$popt['ap']['n']['Yes'] = sprintf('q %s BT /F%d %F Tf %F %F Td ('.chr(110).') Tj ET Q', $this->TextColor, $tmpfont['i'], $this->FontSizePt, $fx, $fy);
+		$popt['ap']['n'][preg_replace('/[^a-zA-Z0-9\-\_]/', '-', $onvalue)] = sprintf('q %s BT /F%d %F Tf %F %F Td ('.chr(110).') Tj ET Q', $this->TextColor, $tmpfont['i'], $this->FontSizePt, $fx, $fy);
 		$popt['ap']['n']['Off'] = sprintf('q %s BT /F%d %F Tf %F %F Td ('.chr(111).') Tj ET Q', $this->TextColor, $tmpfont['i'], $this->FontSizePt, $fx, $fy);
 		// merge options
 		$opt = array_merge($popt, $opt);
@@ -13082,9 +13085,6 @@ class TCPDF {
 		$opt['Subtype'] = 'Widget';
 		$opt['ft'] = 'Btn';
 		$opt['t'] = $name;
-		if (TCPDF_STATIC::empty_string($onvalue)) {
-			$onvalue = 'Yes';
-		}
 		$opt['opt'] = array($onvalue);
 		if ($checked) {
 			$opt['v'] = array('/Yes');
