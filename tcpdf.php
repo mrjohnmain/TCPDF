@@ -12762,6 +12762,9 @@ class TCPDF {
 	 * @since 4.8.000 (2009-09-07)
 	 */
 	public function RadioButton($name, $w, $prop=array(), $opt=array(), $onvalue='On', $checked=false, $x='', $y='', $js=false) {
+
+		$onvalue = preg_replace('/[^a-zA-Z0-9\-\_]/', '-', $onvalue);
+
 		if ($x === '') {
 			$x = $this->x;
 		}
@@ -12800,6 +12803,7 @@ class TCPDF {
 			$this->radiobutton_groups[$this->page][$name]['n'] = $this->n;
 			$this->radio_groups[] = $this->n;
 		}
+
 		$kid = ($this->n + 1);
 		// save object ID to be added on Kids entry on parent object
 		$this->radiobutton_groups[$this->page][$name][] = array('kid' => $kid, 'def' => $defval);
@@ -12810,6 +12814,7 @@ class TCPDF {
 		$prop['borderStyle'] = 'inset';
 		// get annotation data
 		$popt = TCPDF_STATIC::getAnnotOptFromJSProp($prop, $this->spot_colors, $this->rtl);
+
 		// set additional default options
 		$this->annotation_fonts[$tmpfont['fontkey']] = $tmpfont['i'];
 		$fontstyle = sprintf('/F%d %F Tf %s', $tmpfont['i'], $this->FontSizePt, $this->TextColor);
@@ -12819,7 +12824,7 @@ class TCPDF {
 		$popt['ap']['n'] = array();
 		$fx = ((($w - $this->getAbsFontMeasure($tmpfont['cw'][108])) / 2) * $this->k);
 		$fy = (($w - ((($tmpfont['desc']['Ascent'] - $tmpfont['desc']['Descent']) * $this->FontSizePt / 1000) / $this->k)) * $this->k);
-		$popt['ap']['n'][preg_replace('/[^a-zA-Z0-9\-\_]/', '-', $onvalue)] = sprintf('q %s BT /F%d %F Tf %F %F Td ('.chr(108).') Tj ET Q', $this->TextColor, $tmpfont['i'], $this->FontSizePt, $fx, $fy);
+		$popt['ap']['n'][$onvalue] = sprintf('q %s BT /F%d %F Tf %F %F Td ('.chr(108).') Tj ET Q', $this->TextColor, $tmpfont['i'], $this->FontSizePt, $fx, $fy);
 		$popt['ap']['n']['Off'] = sprintf('q %s BT /F%d %F Tf %F %F Td ('.chr(109).') Tj ET Q', $this->TextColor, $tmpfont['i'], $this->FontSizePt, $fx, $fy);
 		if (!isset($popt['mk'])) {
 			$popt['mk'] = array();
@@ -12836,6 +12841,7 @@ class TCPDF {
 		} else {
 			$opt['as'] = 'Off';
 		}
+
 		// store readonly flag
 		if (!isset($this->radiobutton_groups[$this->page][$name]['#readonly#'])) {
 			$this->radiobutton_groups[$this->page][$name]['#readonly#'] = false;
@@ -13038,6 +13044,9 @@ class TCPDF {
 	 * @since 4.8.000 (2009-09-07)
 	 */
 	public function CheckBox($name, $w, $checked=false, $prop=array(), $opt=array(), $onvalue='Yes', $x='', $y='', $js=false) {
+
+		$onvalue = preg_replace('/[^a-zA-Z0-9\-\_]/', '-', $onvalue);
+
 		if ($x === '') {
 			$x = $this->x;
 		}
@@ -13077,7 +13086,7 @@ class TCPDF {
 		$popt['ap']['n'] = array();
 		$fx = ((($w - $this->getAbsFontMeasure($tmpfont['cw'][110])) / 2) * $this->k);
 		$fy = (($w - ((($tmpfont['desc']['Ascent'] - $tmpfont['desc']['Descent']) * $this->FontSizePt / 1000) / $this->k)) * $this->k);
-		$popt['ap']['n'][preg_replace('/[^a-zA-Z0-9\-\_]/', '-', $onvalue)] = sprintf('q %s BT /F%d %F Tf %F %F Td ('.chr(110).') Tj ET Q', $this->TextColor, $tmpfont['i'], $this->FontSizePt, $fx, $fy);
+		$popt['ap']['n'][$onvalue] = sprintf('q %s BT /F%d %F Tf %F %F Td ('.chr(110).') Tj ET Q', $this->TextColor, $tmpfont['i'], $this->FontSizePt, $fx, $fy);
 		$popt['ap']['n']['Off'] = sprintf('q %s BT /F%d %F Tf %F %F Td ('.chr(111).') Tj ET Q', $this->TextColor, $tmpfont['i'], $this->FontSizePt, $fx, $fy);
 		// merge options
 		$opt = array_merge($popt, $opt);
